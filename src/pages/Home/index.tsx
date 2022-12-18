@@ -8,6 +8,7 @@ import {
   PublishingSearch,
   ProfileInfo,
   ProfileResume,
+  Picture,
 } from './styles'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,15 +18,18 @@ import {
   faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { PublishingResume } from './components/PublishingResume'
 
 export function Home() {
   return (
     <HomeContainer>
       <Profile>
-        <img
-          src="https://images.unsplash.com/photo-1671275423001-72a89d07c702?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
-          alt=""
-        />
+        <Picture>
+          <img
+            src="https://images.unsplash.com/photo-1671318805052-deee86db6df3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+            alt=""
+          />
+        </Picture>
 
         <ProfileResume>
           <ProfileBio>
@@ -71,7 +75,12 @@ export function Home() {
           <input type="text" placeholder="Buscar conteúdo" />
         </PublishingSearch>
 
-        <PublishingList></PublishingList>
+        <PublishingList>
+          <PublishingResume />
+          <PublishingResume />
+          <PublishingResume />
+          <PublishingResume />
+        </PublishingList>
       </Publishing>
     </HomeContainer>
   )

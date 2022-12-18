@@ -7,7 +7,7 @@ export const HomeContainer = styled.div`
   position: absolute;
   top: 20.8rem;
   left: 28.8rem;
-  color: white;
+  padding-bottom: 10rem;
 `
 
 export const Profile = styled.div`
@@ -19,9 +19,14 @@ export const Profile = styled.div`
   border-radius: 10px;
   background-color: ${(props) => props.theme['base-profile']};
   box-shadow: 0px 2px 28px rgba(0, 0, 0, 0.2);
+`
+
+export const Picture = styled.div`
+  display: flex;
 
   > img {
     width: 14.8rem;
+    height: 14.8rem;
     border-radius: 8px;
   }
 `
@@ -112,7 +117,11 @@ export const ProfileInfo = styled.div`
   }
 `
 
-export const Publishing = styled.div``
+export const Publishing = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+`
 
 export const PublishingSearch = styled.div`
   display: flex;
@@ -158,4 +167,8 @@ export const PublishingSearch = styled.div`
   }
 `
 
-export const PublishingList = styled.div``
+export const PublishingList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 3.2rem;
+`
