@@ -18,49 +18,62 @@ import {
   faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { PublishingResume } from './components/PublishingResume'
+import { ResumeCard } from './components/ResumeCard'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+
+interface GithubUser {
+  login: string
+  name: string
+  bio: string
+  followers: number
+  company: string
+  avatar_url: string
+  html_url: string
+}
 
 export function Home() {
+  const [user, setUser] = useState<GithubUser>({} as GithubUser)
+
+  useEffect(() => {
+    axios
+      .get<GithubUser>(' https://api.github.com/users/FernandoBrino')
+      .then((response) => setUser(response.data))
+  }, [])
+
   return (
     <HomeContainer>
       <Profile>
         <Picture>
-          <img
-            src="https://images.unsplash.com/photo-1671318805052-deee86db6df3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
-            alt=""
-          />
+          <img src={user.avatar_url} alt="" />
         </Picture>
 
         <ProfileResume>
           <ProfileBio>
             <ProfileTitle>
-              <h1>Cameron Williamson</h1>
-              <a href="#">
+              <h1>{user.name}</h1>
+              <a href={user.html_url}>
                 Github
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
               </a>
             </ProfileTitle>
-            <p>
-              Tristique volutpat pulvinar vel massa, pellentesque egestas. Eu
-              viverra massa quam dignissim aenean malesuada suscipit. Nunc,
-              volutpat pulvinar vel mass.
-            </p>
+            <p>{user.bio}</p>
           </ProfileBio>
 
           <ProfileInfo>
             <span>
               <FontAwesomeIcon icon={faGithub} />
-              cameronwll
+              {user.login}
             </span>
 
             <span>
               <FontAwesomeIcon icon={faBuilding} />
-              Rocketseat
+              {user.company}
             </span>
 
             <span>
               <FontAwesomeIcon icon={faUserGroup} />
-              32 seguidores
+              {user.followers} seguidores
             </span>
           </ProfileInfo>
         </ProfileResume>
@@ -76,10 +89,10 @@ export function Home() {
         </PublishingSearch>
 
         <PublishingList>
-          <PublishingResume />
-          <PublishingResume />
-          <PublishingResume />
-          <PublishingResume />
+          <ResumeCard />
+          <ResumeCard />
+          <ResumeCard />
+          <ResumeCard />
         </PublishingList>
       </Publishing>
     </HomeContainer>

@@ -1,8 +1,15 @@
-import { Content, Header, PublishingResumeContainer } from './styles'
+import { useNavigate } from 'react-router-dom'
+import { Content, Header, ResumeCardContainer } from './styles'
 
-export function PublishingResume() {
+export function ResumeCard() {
+  const navigate = useNavigate()
+
+  function handleLookCompletePost() {
+    navigate('/Post')
+  }
+
   return (
-    <PublishingResumeContainer>
+    <ResumeCardContainer onClick={handleLookCompletePost}>
       <Header>
         <h1>JavaScript data types and data structures</h1>
         <p>Há 1 dia</p>
@@ -20,6 +27,6 @@ export function PublishingResume() {
         let foo = 42; // foo is now a number foo = bar; // foo is now a string
         foo = true; // foo is now a boolean
       </Content>
-    </PublishingResumeContainer>
+    </ResumeCardContainer>
   )
 }

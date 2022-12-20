@@ -6,7 +6,7 @@ export const HomeContainer = styled.div`
   gap: 7.2rem;
   position: absolute;
   top: 20.8rem;
-  left: 28.8rem;
+  left: calc(50% - 864px / 2);
   padding-bottom: 10rem;
 `
 
