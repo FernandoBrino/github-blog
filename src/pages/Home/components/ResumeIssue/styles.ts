@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const ResumeCardContainer = styled.div`
+export const ResumeIssueContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;

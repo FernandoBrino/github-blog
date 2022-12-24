@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import {
   Actions,
   Info,
@@ -15,8 +15,44 @@ import {
   faComment,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { useEffect, useState } from 'react'
+import { formatDistance } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { api } from '../../lib/axios'
+
+interface IssueProps {
+  title: string
+  comments: number
+  created_at: string
+  html_url: string
+  body: string
+  user: {
+    login: string
+  }
+}
 
 export function Post() {
+  const { repo, issueNumber } = useParams()
+  const [issue, setIssue] = useState<IssueProps>()
+
+  useEffect(() => {
+    api
+      .get<IssueProps>(
+        `https://api.github.com/repos/FernandoBrino/${repo}/issues/${issueNumber}`,
+      )
+      .then((response) => setIssue(response.data))
+  }, [repo, issueNumber])
+
+  const pastTime = formatDistance(
+    new Date(issue?.created_at ?? new Date()),
+    new Date(),
+    {
+      locale: ptBR,
+    },
+  )
+
   return (
     <PostContainer>
       <PostInfo>
@@ -25,31 +61,35 @@ export function Post() {
             <FontAwesomeIcon icon={faChevronLeft} />
             Voltar
           </NavLink>
-          <NavLink to="#">
+          <a href={issue?.html_url}>
             Ver no Github
             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-          </NavLink>
+          </a>
         </Actions>
 
         <InfoWrapper>
-          <h1>JavaScript data types and data structures</h1>
+          <h1>{issue?.title}</h1>
           <Info>
             <span>
               <FontAwesomeIcon icon={faGithub} />
-              cameronwll
+              {issue?.user.login}
             </span>
             <span>
               <FontAwesomeIcon icon={faCalendarDay} />
-              Há 1 dia
+              Há {pastTime}
             </span>
             <span>
-              <FontAwesomeIcon icon={faComment} /> 5 comentários
+              <FontAwesomeIcon icon={faComment} /> {issue?.comments} comentários
             </span>
           </Info>
         </InfoWrapper>
       </PostInfo>
 
-      <PostBody></PostBody>
+      <PostBody>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {issue?.body ?? ''}
+        </ReactMarkdown>
+      </PostBody>
     </PostContainer>
   )
 }

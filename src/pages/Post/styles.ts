@@ -7,6 +7,8 @@ export const PostContainer = styled.div`
   gap: 4rem;
   top: 20.8rem;
   left: calc(50% - 864px / 2);
+  width: 86.4rem;
+  padding-bottom: 10rem;
 `
 
 export const PostInfo = styled.div`
@@ -95,4 +97,13 @@ export const Info = styled.div`
   gap: 3.2rem;
 `
 
-export const PostBody = styled.div``
+export const PostBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: ${(props) => props.theme['base-text']};
+
+  a {
+    color: ${(props) => props.theme.blue};
+  }
+`

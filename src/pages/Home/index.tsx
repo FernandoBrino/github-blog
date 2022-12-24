@@ -18,11 +18,11 @@ import {
   faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { ResumeCard } from './components/ResumeCard'
+import { ResumeIssue } from './components/ResumeIssue'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { api } from '../../lib/axios'
 
-interface GithubUser {
+interface GithubUserProps {
   login: string
   name: string
   bio: string
@@ -32,13 +32,32 @@ interface GithubUser {
   html_url: string
 }
 
+interface IssueProps {
+  id: number
+  title: string
+  body: string
+  comments: number
+  number: number
+  created_at: string
+  repository_url: string
+}
+
+interface UserIssuesProps {
+  items: IssueProps[]
+}
+
 export function Home() {
-  const [user, setUser] = useState<GithubUser>({} as GithubUser)
+  const [user, setUser] = useState<GithubUserProps>({} as GithubUserProps)
+  const [issues, setIssues] = useState<IssueProps[]>([])
 
   useEffect(() => {
-    axios
-      .get<GithubUser>(' https://api.github.com/users/FernandoBrino')
+    api
+      .get<GithubUserProps>('https://api.github.com/users/FernandoBrino')
       .then((response) => setUser(response.data))
+
+    api
+      .get<UserIssuesProps>('search/issues?q=user:FernandoBrino')
+      .then((response) => setIssues(response.data.items))
   }, [])
 
   return (
@@ -83,16 +102,15 @@ export function Home() {
         <PublishingSearch>
           <span>
             <h1>Publicações</h1>
-            <p>6 publicações</p>
+            <p>{issues.length} publicações</p>
           </span>
           <input type="text" placeholder="Buscar conteúdo" />
         </PublishingSearch>
 
         <PublishingList>
-          <ResumeCard />
-          <ResumeCard />
-          <ResumeCard />
-          <ResumeCard />
+          {issues.map((issue) => (
+            <ResumeIssue key={issue.id} issue={issue} />
+          ))}
         </PublishingList>
       </Publishing>
     </HomeContainer>
