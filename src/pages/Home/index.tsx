@@ -21,6 +21,9 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { ResumeIssue } from './components/ResumeIssue'
 import { useEffect, useState } from 'react'
 import { api } from '../../lib/axios'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface GithubUserProps {
   login: string
@@ -46,19 +49,45 @@ interface UserIssuesProps {
   items: IssueProps[]
 }
 
+const searchRepoSchema = z.object({
+  query: z.string(),
+})
+
+type SearchRepoData = z.infer<typeof searchRepoSchema>
+
 export function Home() {
   const [user, setUser] = useState<GithubUserProps>({} as GithubUserProps)
   const [issues, setIssues] = useState<IssueProps[]>([])
 
+  const { watch, register } = useForm<SearchRepoData>({
+    resolver: zodResolver(searchRepoSchema),
+  })
+
+  const userSearch = watch('query')
+
   useEffect(() => {
     api
-      .get<GithubUserProps>('https://api.github.com/users/FernandoBrino')
+      .get<GithubUserProps>('/users/FernandoBrino')
       .then((response) => setUser(response.data))
-
-    api
-      .get<UserIssuesProps>('search/issues?q=user:FernandoBrino')
-      .then((response) => setIssues(response.data.items))
   }, [])
+
+  useEffect(() => {
+    if (userSearch === undefined) {
+      api
+        .get<UserIssuesProps>(`/search/issues?q=user:FernandoBrino`)
+        .then((response) => setIssues(response.data.items))
+    } else {
+      const waitToStopTyping = setTimeout(() => {
+        api
+          .get<UserIssuesProps>(
+            `/search/issues?q=user:FernandoBrino%20${userSearch}`,
+          )
+          .then((response) => setIssues(response.data.items))
+      }, 1000)
+
+      return () => clearTimeout(waitToStopTyping)
+    }
+  }, [userSearch])
 
   return (
     <HomeContainer>
@@ -104,7 +133,11 @@ export function Home() {
             <h1>Publicações</h1>
             <p>{issues.length} publicações</p>
           </span>
-          <input type="text" placeholder="Buscar conteúdo" />
+          <input
+            type="text"
+            placeholder="Buscar conteúdo"
+            {...register('query')}
+          />
         </PublishingSearch>
 
         <PublishingList>

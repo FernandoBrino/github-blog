@@ -39,9 +39,7 @@ export function Post() {
 
   useEffect(() => {
     api
-      .get<IssueProps>(
-        `https://api.github.com/repos/FernandoBrino/${repo}/issues/${issueNumber}`,
-      )
+      .get<IssueProps>(`/repos/FernandoBrino/${repo}/issues/${issueNumber}`)
       .then((response) => setIssue(response.data))
   }, [repo, issueNumber])
 
